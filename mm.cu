@@ -12,7 +12,6 @@ __global__ void mm_kernel(float* A, float* B, float* C) {
         for (int i = 0; i < N; ++i) {
             C[row * N + col] += A[row * N + i] * B[i * N + col];
         }
-        printf("%d %d %d", row, col, C[row * N + col]);
     } 
 }
 
@@ -37,5 +36,14 @@ int main() {
 
     mm_kernel<<<dimGrid, dimBlock>>> (d_a, d_b, d_c);
     
+    cudaMemcpy(d_c, &c, N*N*sizeof(float), cudaMemcpyDeviceToHost);
+
+    for(int i = 0; i < N; i++){
+        for(int j = 0; j < N; j++){
+            printf("%d ", c[i*N + j]);
+        }
+        printf("\n");
+    }
+
     return 0;
 }
