@@ -10,6 +10,8 @@ __global__ void mm_kernel(float* A, float* B, float* C) {
     int row = blockIdx.y * blockDim.y + threadIdx.y;
     if (row < N && col < N) {
         for (int i = 0; i < N; ++i) {
+            printf("%A : %d %d, B : %d %d", row * N + i, A[row * N + i],
+            i * N + col,  B[i * N + col]);
             C[row * N + col] += A[row * N + i] * B[i * N + col];
         }
     } 
@@ -20,22 +22,26 @@ int main() {
 
     //dim3 dimGrid(3, 3, 1);
     //dim3 dimBlock(N/3, N/3, 1);
-    dim3 dimGrid(2, 1, 1);
-    dim3 dimBlock(2, 1, 1);
+    dim3 dimGrid(3, 1, 1);
+    dim3 dimBlock(3, 1, 1);
     float a[N], b[N], c[N_2];
 
     for(int i = 0; i < N; i++){
         a[i] = rand() % 10;
         b[i] = rand() % 10;
     }
+    printf("a:\n");
     for(int i = 0; i < N; i++){
         printf("%f ", a[i]);
     }
     printf("\n");
+    printf("\n");
 
+    printf("b:\n");
     for(int i = 0; i < N; i++){
         printf("%f ", b[i]);
     }
+    printf("\n");
     printf("\n");
 
     float*d_a, *d_b, *d_c;
