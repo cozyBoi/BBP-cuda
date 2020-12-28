@@ -26,6 +26,9 @@ int main() {
     srand(time(NULL));
     int a[N], b[N];
     
+    cudaEvent_t start, stop;
+    cudaEventCreate(&start);
+    cudaEventCreate(&stop);
     
     for(int i = 0; i < N; i++){
         a[i] = rand() % 1000;
@@ -45,8 +48,9 @@ int main() {
     cudaMalloc((void **)&d_b, N*sizeof(int));
     cudaMemcpy(d_a, a, N*sizeof(int), cudaMemcpyHostToDevice);
 
+    cudaEventRecord(start);
     reduce0<<<dimGrid, dimBlock>>> (d_a, d_b);
-    
+    cudaEventRecord(stop);
     cudaMemcpy(b, d_b, N*sizeof(int), cudaMemcpyDeviceToHost);
 
     while(1){
@@ -56,7 +60,7 @@ int main() {
 
         if(b[1] == 0) break;
     }
-
+    
     /*
     printf("a: ");
     for(int i = 0;i < N; i++){
@@ -70,6 +74,10 @@ int main() {
         printf("%d ", b[i]);
     }
     printf("\n");*/
+    cudaEventSynchronize(stop);
+    float milliseconds = 0;
+    cudaEventElapsedTime(&milliseconds, start, stop);
+    printf("time : %f\n", milliseconds);
     printf("max : %d\n", b[0]);
     return 0;
 }

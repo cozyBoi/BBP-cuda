@@ -2,16 +2,16 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define N 3
+#define N 1024
 #define N_2 N*N
 
 #define BLOCK_SIZE 16
 
-__global__ void mm_kernel(float* A, float* B, double* C) {
+__global__ void mm_kernel(float* A, float* B, float* C) {
     int col = blockIdx.x * blockDim.x + threadIdx.x;
     int row = blockIdx.y * blockDim.y + threadIdx.y;
     if (row < N && col < N) {
-        double tmp = 0;
+        float tmp = 0;
         for (int i = 0; i < N; ++i) {
              tmp += A[row * N + i] * B[i * N + col];
         }
@@ -25,7 +25,7 @@ int main() {
     //dim3 dimGrid(3, 3, 1);
     //dim3 dimBlock(N/3, N/3, 1);
     float a[N_2], b[N_2];
-    double c[N_2];
+    float c[N_2];
 
     for(int i = 0; i < N; i++){
         for(int j = 0; j < N; j++){
@@ -53,12 +53,16 @@ int main() {
     }
     printf("\n");
     printf("\n");*/
+    cudaEvent_t start, stop;
+    cudaEventCreate(&start);
+    cudaEventCreate(&stop);
+
 
     float*d_a, *d_b;
-    double *d_c;
+    float *d_c;
     cudaMalloc((void **)&d_a, N_2*sizeof(float));
     cudaMalloc((void **)&d_b, N_2*sizeof(float));
-    cudaMalloc((void **)&d_c, N_2*sizeof(double));
+    cudaMalloc((void **)&d_c, N_2*sizeof(float));
     cudaMemcpy(d_a, a, N_2*sizeof(float), cudaMemcpyHostToDevice);
     cudaMemcpy(d_b, b, N_2*sizeof(float), cudaMemcpyHostToDevice);
 
@@ -68,9 +72,17 @@ int main() {
     dim3 dimGrid(grid_cols, grid_rows, 1); //.x
     dim3 dimBlock(BLOCK_SIZE, BLOCK_SIZE, 1); //.y
 
+    cudaEventRecord(start);
     mm_kernel<<<dimGrid, dimBlock>>> (d_a, d_b, d_c);
-    
-    cudaMemcpy(c, d_c, N*N*sizeof(double), cudaMemcpyDeviceToHost);
+    cudaEventRecord(stop);
+
+    cudaMemcpy(c, d_c, N*N*sizeof(float), cudaMemcpyDeviceToHost);
+
+    cudaEventSynchronize(stop);
+    float milliseconds = 0;
+    cudaEventElapsedTime(&milliseconds, start, stop);
+    printf("time : %f\n", milliseconds);
+
     /*
     for(int i = 0; i < N; i++){
         for(int j = 0; j < N; j++){
