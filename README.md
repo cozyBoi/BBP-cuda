@@ -1,6 +1,10 @@
 # BBP-cuda
 compile
-``` sh compile.sh
+``` 
+sh compile.sh
+```
 
 clean
-``` sh clean.sh
+```
+sh clean.sh
+```
