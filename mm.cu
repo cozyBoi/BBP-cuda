@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
-#define N 3
+#define N 9
 #define N_2 N*N
 
 __global__ void mm_kernel(float* A, float* B, float* C) {
@@ -16,9 +17,17 @@ __global__ void mm_kernel(float* A, float* B, float* C) {
 }
 
 int main() {
-    dim3 dimGrid(1, 1, 1);
-    dim3 dimBlock(1, 1, 1);
+    srand(time(NULL));
+
+    dim3 dimGrid(3, 3, 1);
+    dim3 dimBlock(N/3, N/3, 1);
     float a[N], b[N], C[N_2];
+
+    for(int i = 0; i < N; i++){
+        a[i] = rand() % 10;
+        b[i] = rand() % 10;
+    }
+
     float*d_a, *d_b, *d_c;
     cudaMalloc((void **)&d_a, N*sizeof(float));
     cudaMalloc((void **)&d_b, N*sizeof(float));
