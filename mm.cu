@@ -20,7 +20,7 @@ int main() {
 
     dim3 dimGrid(3, 3, 1);
     dim3 dimBlock(N/3, N/3, 1);
-    float a[N], b[N], C[N_2];
+    float a[N], b[N], c[N_2];
 
     for(int i = 0; i < N; i++){
         a[i] = rand() % 10;
