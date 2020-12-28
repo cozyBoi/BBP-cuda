@@ -10,7 +10,7 @@ __global__ void reduce0(int *g_idata, int *g_odata) {
     unsigned int i = blockIdx.x*blockDim.x + threadIdx.x;
     sdata[tid] = g_idata[i];
     __syncthreads();
-    // do reduction in shared mem
+    // v                                                                            do reduction in shared mem
     for (unsigned int s=blockDim.x/2; s>0; s>>=1) {
         if (tid < s) {
             sdata[tid] = sdata[tid + s] >  sdata[tid] ? sdata[tid + s] : sdata[tid]; 
