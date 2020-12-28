@@ -24,8 +24,8 @@ __global__ void reduce0(int *g_idata, int *g_odata) {
 int main() {
     dim3 dimGrid(8, 1, 1);
     dim3 dimBlock(8, 1, 1);
-    int a[N], b[N], C[N_2];
-    int*d_a, *d_b, *d_c;
+    int a[N], b[N];
+    int*d_a, *d_b;
     cudaMalloc((void **)&d_a, N*sizeof(int));
     cudaMalloc((void **)&d_b, N*sizeof(int));
     cudaMemcpy(d_a, &a, N*sizeof(int), cudaMemcpyHostToDevice);
