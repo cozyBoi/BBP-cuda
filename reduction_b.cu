@@ -53,7 +53,7 @@ int main() {
     cudaEventRecord(start);
     reduce0<<<dimGrid, dimBlock>>> (d_a, d_b);
     cudaEventRecord(stop);
-
+    cudaEventSynchronize(stop);
     cudaMemcpy(b, d_b, N*sizeof(int), cudaMemcpyDeviceToHost);
 
     while(1){
@@ -77,7 +77,7 @@ int main() {
         printf("%d ", b[i]);
     }
     printf("\n");*/
-    cudaEventSynchronize(stop);
+    
     float milliseconds = 0;
     cudaEventElapsedTime(&milliseconds, start, stop);
     printf("time : %f\n", milliseconds);

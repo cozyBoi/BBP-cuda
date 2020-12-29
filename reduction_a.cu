@@ -19,11 +19,10 @@ int main() {
 
     cudaEventRecord(start);
     int maxVal = arr[0];
-    //int log2_Nnum = log_2(N);
     for (unsigned int s=1; s < N; s *= 2) {
         for (unsigned int i=0; i < N; i++) {
             if (i + s < N) { 
-                arr[i] = arr[i + s] > arr[i] ? arr[i + s]  : arr[i];
+                maxVal = arr[i + s] > arr[i] ? arr[i + s]  : arr[i];
             }
         }
     }
