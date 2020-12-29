@@ -5,7 +5,7 @@
 #define N 32
 #define N_2 N*N
 
-#define BLOCK_SIZE 16
+#define BLOCK_SIZE 32
 
 __global__ void mm_kernel(float* A, float* B, float* C) {
     unsigned int col = blockIdx.x * blockDim.x + threadIdx.x;
