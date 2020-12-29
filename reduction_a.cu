@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#define N 10000
+#define N 10000 * 100
+
+int arr[N];
 
 int main() {
     srand(time(NULL));
@@ -10,7 +12,7 @@ int main() {
     cudaEventCreate(&start);
     cudaEventCreate(&stop);
 
-    int arr[N];
+    
     for(int i = 0; i < N; i++){
         arr[i] = rand() % 1000;
     }

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define N 10000
+#define N 10000 * 100
 #define BLOCK_SIZE 16
 __global__ void reduce0(int *g_idata, int *g_odata) {
     __shared__ int sdata[16];
@@ -22,9 +22,10 @@ __global__ void reduce0(int *g_idata, int *g_odata) {
     if (tid == 0) g_odata[blockIdx.x] = sdata[0];
 }
 
+int a[N], b[N];
 int main() {
     srand(time(NULL));
-    int a[N], b[N];
+    
     
     cudaEvent_t start, stop;
     cudaEventCreate(&start);
