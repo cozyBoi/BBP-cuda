@@ -17,7 +17,7 @@ __global__ void mm_kernel(float* A, float* B, float* C) {
     __shared__ float a[BLOCK_SIZE][BLOCK_SIZE], b[BLOCK_SIZE][BLOCK_SIZE]; 
     if (row < N && col < N) {
         float tmp = 0;
-        for (int i = 0; i < grdy; ++i) {
+        for (int i = 0; i < N / BLOCK_SIZE; ++i) {
             a[thx][thy] = A[row*N+i*BLOCK_SIZE+thy];
             b[thy][thx] = B[col+N*(i*BLOCK_SIZE+thx)];
             __syncthreads(); 
