@@ -40,8 +40,11 @@ int main() {
     unsigned int grid_rows = (N + BLOCK_SIZE - 1) / BLOCK_SIZE;
     unsigned int grid_cols = (N + BLOCK_SIZE - 1) / BLOCK_SIZE;
 
-    dim3 dimGrid(grid_cols, grid_rows, 1); //.x
-    dim3 dimBlock(BLOCK_SIZE, BLOCK_SIZE, 1); //.y
+    //dim3 dimGrid(grid_cols, grid_rows, 1); //.x
+    //dim3 dimBlock(BLOCK_SIZE, BLOCK_SIZE, 1); //.y
+
+    dim3 dimGrid(grid_cols); //.x
+    dim3 dimBlock(BLOCK_SIZE); //.y
 
     
     int*d_a, *d_b;
