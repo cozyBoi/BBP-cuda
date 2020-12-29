@@ -18,11 +18,11 @@ int main() {
     }
 
     cudaEventRecord(start);
-    int maxVal = arr[0];
+    
     for (unsigned int s=1; s < N; s *= 2) {
         for (unsigned int i=0; i < N; i++) {
             if (i + s < N) { 
-                maxVal = arr[i + s] > arr[i] ? arr[i + s]  : arr[i];
+                arr[i] = arr[i + s] > arr[i] ? arr[i + s]  : arr[i];
             }
         }
     }
@@ -33,6 +33,6 @@ int main() {
     cudaEventElapsedTime(&milliseconds, start, stop);
     printf("time : %f\n", milliseconds);
 
-    printf("%d\n", maxVal);
+    printf("%d\n", arr[0]);
     return 0;
 }
