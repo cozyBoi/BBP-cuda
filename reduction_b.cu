@@ -49,12 +49,12 @@ int main() {
     cudaMalloc((void **)&d_b, N*sizeof(int));
     cudaMemcpy(d_a, a, N*sizeof(int), cudaMemcpyHostToDevice);
 
-    cudaEventRecord(start);
+    
     reduce0<<<dimGrid, dimBlock>>> (d_a, d_b);
-    cudaEventRecord(stop);
+    
 
     cudaMemcpy(b, d_b, N*sizeof(int), cudaMemcpyDeviceToHost);
-
+    cudaEventRecord(start);
     while(1){
         reduce0<<<dimGrid, dimBlock>>> (d_b, d_b);
     
@@ -62,7 +62,7 @@ int main() {
 
         if(b[1] == 0) break;
     }
-    
+    cudaEventRecord(stop);
     /*
     printf("a: ");
     for(int i = 0;i < N; i++){
