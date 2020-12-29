@@ -3,7 +3,7 @@
 #include <time.h>
 
 #define N 10000 * 10
-#define BLOCK_SIZE 16
+#define BLOCK_SIZE 32
 __global__ void reduce0(int *g_idata, int *g_odata) {
     __shared__ int sdata[16];
     // each thread loads one element from global to shared mem
@@ -49,12 +49,12 @@ int main() {
     cudaMalloc((void **)&d_b, N*sizeof(int));
     cudaMemcpy(d_a, a, N*sizeof(int), cudaMemcpyHostToDevice);
 
-    
+    cudaEventRecord(start);
     reduce0<<<dimGrid, dimBlock>>> (d_a, d_b);
-    
+    cudaEventRecord(stop);
 
     cudaMemcpy(b, d_b, N*sizeof(int), cudaMemcpyDeviceToHost);
-    cudaEventRecord(start);
+
     while(1){
         reduce0<<<dimGrid, dimBlock>>> (d_b, d_b);
     
@@ -62,7 +62,7 @@ int main() {
 
         if(b[1] == 0) break;
     }
-    cudaEventRecord(stop);
+    
     /*
     printf("a: ");
     for(int i = 0;i < N; i++){
