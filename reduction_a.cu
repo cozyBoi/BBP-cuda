@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#define N 10000
+#define N 10000 * 10
 
 int arr[N];
 

@@ -5,7 +5,7 @@
 #define N 10000 * 10
 #define BLOCK_SIZE 32
 __global__ void reduce0(int *g_idata, int *g_odata) {
-    __shared__ int sdata[16];
+    __shared__ int sdata[10000];
     // each thread loads one element from global to shared mem
     unsigned int tid = threadIdx.x;
     unsigned int i = blockIdx.x*blockDim.x + threadIdx.x;
