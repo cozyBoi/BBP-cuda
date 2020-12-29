@@ -5,7 +5,7 @@
 #define N 4096
 #define N_2 N*N
 
-#define BLOCK_SIZE 8
+#define BLOCK_SIZE 16
 
 float a[N_2], b[N_2];
 float c[N_2];
