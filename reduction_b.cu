@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define N 10000
+#define N 10000 * 100
 #define BLOCK_SIZE 16
 __global__ void reduce0(int *g_idata, int *g_odata) {
     __shared__ int sdata[16];
@@ -11,13 +11,13 @@ __global__ void reduce0(int *g_idata, int *g_odata) {
     unsigned int i = blockIdx.x*blockDim.x + threadIdx.x;
     sdata[tid] = g_idata[i];
     __syncthreads();
-    for (unsigned int s=1; s < blockDim.x; s *= 2) {
-        int index = 2 * s * tid;
-        if (index < blockDim.x) { 
-            sdata[index] = sdata[index + s] > sdata[index] ? sdata[index + s]  : sdata[index];
+    // do reduction in shared mem
+    for(unsigned int s=1; s < blockDim.x; s *= 2) { 
+        if (tid % (2*s) == 0) {
+           sdata[tid] = sdata[tid + s] > sdata[tid] ? sdata[tid + s] : sdata[tid]; 
         }
-        __syncthreads();
-     }
+        __syncthreads(); 
+    }
     // write result for this block to global mem
     if (tid == 0) g_odata[blockIdx.x] = sdata[0];
 }
@@ -49,11 +49,10 @@ int main() {
     cudaMalloc((void **)&d_b, N*sizeof(int));
     cudaMemcpy(d_a, a, N*sizeof(int), cudaMemcpyHostToDevice);
 
-
     cudaEventRecord(start);
     reduce0<<<dimGrid, dimBlock>>> (d_a, d_b);
     cudaEventRecord(stop);
-    cudaEventSynchronize(stop);
+
     cudaMemcpy(b, d_b, N*sizeof(int), cudaMemcpyDeviceToHost);
 
     while(1){
@@ -77,7 +76,7 @@ int main() {
         printf("%d ", b[i]);
     }
     printf("\n");*/
-    
+    cudaEventSynchronize(stop);
     float milliseconds = 0;
     cudaEventElapsedTime(&milliseconds, start, stop);
     printf("time : %f\n", milliseconds);
