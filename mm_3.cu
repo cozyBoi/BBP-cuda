@@ -17,9 +17,9 @@ __global__ void mm_kernel(float* A, float* B, float* C) {
     __shared__ float a[BLOCK_SIZE][BLOCK_SIZE], b[BLOCK_SIZE][BLOCK_SIZE]; 
     if (row < N && col < N) {
         float tmp = 0;
-        for (int i = 0; i < N / BLOCK_SIZE; ++i) {
-            a[thx][thy] = A[row*N+i*BLOCK_SIZE+thy];
-            b[thy][thx] = B[col+N*(i*BLOCK_SIZE+thx)];
+        for (int i = 0; i < grdy; ++i) {
+            a[thx][thy] = A[row*N+i*BLOCK_SIZE+thx];
+            b[thy][thx] = B[col+N*(i*BLOCK_SIZE+thy)];
             __syncthreads(); 
             for (unsigned int j=0; j < BLOCK_SIZE; j++){
                 tmp += a[j][thx]*b[j][thy];
@@ -79,8 +79,9 @@ int main() {
     unsigned int grid_rows = (N + BLOCK_SIZE - 1) / BLOCK_SIZE;
     unsigned int grid_cols = (N + BLOCK_SIZE - 1) / BLOCK_SIZE;
 
-    dim3 dimGrid(grid_cols, grid_rows, 1); //.x
-    dim3 dimBlock(BLOCK_SIZE, BLOCK_SIZE, 1); //.y
+    //dim3 dimGrid(grid_cols, grid_rows, 1); //.x
+    dim3 dimGrid(N / BLOCK_SIZE, N / BLOCK_SIZE); //.x
+    dim3 dimBlock(BLOCK_SIZE, BLOCK_SIZE); //.y
 
     cudaEventRecord(start);
     mm_kernel<<<dimGrid, dimBlock>>> (d_a, d_b, d_c);
