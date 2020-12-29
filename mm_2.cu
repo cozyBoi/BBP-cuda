@@ -15,21 +15,23 @@ __global__ void mm_kernel(float* A, float* B, float* C) {
     unsigned int row = blockIdx.y * blockDim.y + threadIdx.y;
     unsigned int thx = threadIdx.x, thy = threadIdx.y;
     unsigned int grdx = gridDim.x, grdy = gridDim.y;
-    __shared__ float a[BLOCK_SIZE][BLOCK_SIZE], b[BLOCK_SIZE][BLOCK_SIZE]; 
+    //const unsigned int bx = BLOCK_X, by = BLOCK_Y;
+    unsigned int bx = blockDim.x, by = blockDim.y;
+
+    __shared__ float a[blockDim.x][blockDim.y], b[blockDim.x][blockDim.y]; 
     if (row < N && col < N) {
         float tmp = 0;
-        C[row * N + col] = 0;
         for (int i = 0; i < grdy; ++i) { //2. grd를 넘기면 멈춤
-            a[thx][thy] = A[row*N+i*BLOCK_SIZE+thy]; //1. block을 옮겨다님
-            b[thy][thx] = B[col+N*(i*BLOCK_SIZE+thx)];
+            a[thx][thy] = A[row*N+i*blockDim.y+thy]; //1. block을 옮겨다님
+            b[thy][thx] = B[col+N*(i*blockDim.x+thx)];
             __syncthreads(); 
-            for (unsigned int j=0; j < BLOCK_SIZE; j++){
+            for (unsigned int j=0; j < blockDim.x; j++){
                 tmp += a[j][thx]*b[j][thy];
             }
             __syncthreads(); 
             //tmp += A[row * N + i] * B[i * N + col];
         }
-        C[row * N + col] += tmp;
+        C[row * N + col] = tmp;
     } 
 }
 
