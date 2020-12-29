@@ -21,7 +21,7 @@ __global__ void mm_kernel(float* A, float* B, float* C) {
     __shared__ float a[BLOCK_SIZE][BLOCK_SIZE], b[BLOCK_SIZE][BLOCK_SIZE];
     if (row < N && col < N) {
         float tmp = 0;
-        for (int i = 0; i < N / BLOCK_SIZE; ++i) { //2. grd를 넘기면 멈춤
+        for (int i = 0; i < grdy; ++i) { //2. grd를 넘기면 멈춤
             a[thx][thy] = A[row*N+i*by+thx]; //1. block을 옮겨다님
             b[thy][thx] = B[col+N*(i*bx+thy)];
             __syncthreads(); 
