@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define N 10000 * 100
+#define N 10000 * 10
 #define BLOCK_SIZE 16
 __global__ void reduce0(int *g_idata, int *g_odata) {
     __shared__ int sdata[16];
