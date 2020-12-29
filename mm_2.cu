@@ -48,7 +48,7 @@ int main() {
             b[i*N + j] = rand() % 10 + 1;
         }
     }
-    
+    /*
     printf("a:\n");
     for(int i = 0; i < N; i++){
         for(int j = 0; j < N; j++){
@@ -67,7 +67,7 @@ int main() {
         printf("\n");
     }
     printf("\n");
-    printf("\n");
+    printf("\n");*/
     cudaEvent_t start, stop;
     cudaEventCreate(&start);
     cudaEventCreate(&stop);
@@ -98,13 +98,13 @@ int main() {
     cudaEventElapsedTime(&milliseconds, start, stop);
     printf("time : %f\n", milliseconds);
 
-    
+    /*
     for(int i = 0; i < N; i++){
         for(int j = 0; j < N; j++){
             printf("%lf ", c[i*N + j]);
         }
         printf("\n");
-    }
+    }*/
     cudaFree(d_a);
     cudaFree(d_b);
     cudaFree(d_c);
