@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define N 4096
+#define N 3
 #define N_2 N*N
 
 #define BLOCK_SIZE 32
@@ -22,8 +22,8 @@ __global__ void mm_kernel(float* A, float* B, float* C) {
     if (row < N && col < N) {
         float tmp = 0;
         for (int i = 0; i < N / BLOCK_SIZE; ++i) { //2. grd를 넘기면 멈춤
-            a[thx][thy] = A[row*N+i*by+thy]; //1. block을 옮겨다님
-            b[thy][thx] = B[col+N*(i*bx+thx)];
+            a[thx][thy] = A[row*N+i*by+thx]; //1. block을 옮겨다님
+            b[thy][thx] = B[col+N*(i*bx+thy)];
             __syncthreads(); 
             for (unsigned int j=0; j < bx; j++){
                 tmp += a[j][thx]*b[j][thy];
@@ -48,7 +48,7 @@ int main() {
             b[i*N + j] = rand() % 10 + 1;
         }
     }
-    /*
+    
     printf("a:\n");
     for(int i = 0; i < N; i++){
         for(int j = 0; j < N; j++){
@@ -67,7 +67,7 @@ int main() {
         printf("\n");
     }
     printf("\n");
-    printf("\n");*/
+    printf("\n");
     cudaEvent_t start, stop;
     cudaEventCreate(&start);
     cudaEventCreate(&stop);
@@ -98,13 +98,13 @@ int main() {
     cudaEventElapsedTime(&milliseconds, start, stop);
     printf("time : %f\n", milliseconds);
 
-    /*
+    
     for(int i = 0; i < N; i++){
         for(int j = 0; j < N; j++){
             printf("%lf ", c[i*N + j]);
         }
         printf("\n");
-    }*/
+    }
     cudaFree(d_a);
     cudaFree(d_b);
     cudaFree(d_c);
