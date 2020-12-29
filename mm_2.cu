@@ -22,10 +22,10 @@ __global__ void mm_kernel(float* A, float* B, float* C) {
     if (row < N && col < N) {
         float tmp = 0;
         for (int i = 0; i < grdy; ++i) { //2. grd를 넘기면 멈춤
-            a[thx][thy] = A[row*N+i*blockDim.y+thy]; //1. block을 옮겨다님
-            b[thy][thx] = B[col+N*(i*blockDim.x+thx)];
+            a[thx][thy] = A[row*N+i*by+thy]; //1. block을 옮겨다님
+            b[thy][thx] = B[col+N*(i*bx+thx)];
             __syncthreads(); 
-            for (unsigned int j=0; j < blockDim.x; j++){
+            for (unsigned int j=0; j < bx; j++){
                 tmp += a[j][thx]*b[j][thy];
             }
             __syncthreads(); 
