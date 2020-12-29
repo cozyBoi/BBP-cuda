@@ -70,8 +70,10 @@ int main() {
     unsigned int grid_rows = (N + BLOCK_SIZE - 1) / BLOCK_SIZE;
     unsigned int grid_cols = (N + BLOCK_SIZE - 1) / BLOCK_SIZE;
 
-    dim3 dimGrid(grid_cols, grid_rows, 1); //.x
-    dim3 dimBlock(BLOCK_SIZE, BLOCK_SIZE, 1); //.y
+    //dim3 dimGrid(grid_cols, grid_rows, 1); //.x
+    //dim3 dimBlock(BLOCK_SIZE, BLOCK_SIZE, 1); //.y
+    dim3 dimGrid(N / BLOCK_SIZE, N / BLOCK_SIZE); //.x
+    dim3 dimBlock(BLOCK_SIZE, BLOCK_SIZE); //.y
 
     cudaEventRecord(start);
     mm_kernel<<<dimGrid, dimBlock>>> (d_a, d_b, d_c);
