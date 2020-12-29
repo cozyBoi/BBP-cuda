@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define N 1024
+#define N 32
 #define N_2 N*N
 
 #define BLOCK_SIZE 16
