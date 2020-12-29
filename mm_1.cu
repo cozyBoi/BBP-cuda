@@ -2,11 +2,13 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define N 32
+#define N 4096
 #define N_2 N*N
 
-#define BLOCK_SIZE 16
+#define BLOCK_SIZE 32
 
+float a[N_2], b[N_2];
+float c[N_2];
 __global__ void mm_kernel(float* A, float* B, float* C) {
     int col = blockIdx.x * blockDim.x + threadIdx.x;
     int row = blockIdx.y * blockDim.y + threadIdx.y;
@@ -24,8 +26,7 @@ int main() {
 
     //dim3 dimGrid(3, 3, 1);
     //dim3 dimBlock(N/3, N/3, 1);
-    float a[N_2], b[N_2];
-    float c[N_2];
+    
 
     for(int i = 0; i < N; i++){
         for(int j = 0; j < N; j++){
