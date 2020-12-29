@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define N 4096
+#define N 7000
 #define N_2 N*N
 
-#define BLOCK_SIZE 4
+#define BLOCK_SIZE 32
 
 float a[N_2], b[N_2];
 float c[N_2];
