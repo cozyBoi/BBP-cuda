@@ -5,7 +5,7 @@
 #define N 4096
 #define N_2 N*N
 
-#define BLOCK_SIZE 32
+#define BLOCK_SIZE 16
 
 float a[N_2], b[N_2];
 float c[N_2];
@@ -70,16 +70,13 @@ int main() {
     unsigned int grid_rows = (N + BLOCK_SIZE - 1) / BLOCK_SIZE;
     unsigned int grid_cols = (N + BLOCK_SIZE - 1) / BLOCK_SIZE;
 
-    //dim3 dimGrid(grid_cols, grid_rows, 1); //.x
-    //dim3 dimBlock(BLOCK_SIZE, BLOCK_SIZE, 1); //.y
-    dim3 dimGrid(N / BLOCK_SIZE, N / BLOCK_SIZE); //.x
-    dim3 dimBlock(BLOCK_SIZE, BLOCK_SIZE); //.y
+    dim3 dimGrid(grid_cols, grid_rows, 1); //.x
+    dim3 dimBlock(BLOCK_SIZE, BLOCK_SIZE, 1); //.y
 
     cudaEventRecord(start);
     mm_kernel<<<dimGrid, dimBlock>>> (d_a, d_b, d_c);
-    cudaEventRecord(stop);
-
     cudaMemcpy(c, d_c, N*N*sizeof(float), cudaMemcpyDeviceToHost);
+    cudaEventRecord(stop);
 
     cudaEventSynchronize(stop);
     float milliseconds = 0;
