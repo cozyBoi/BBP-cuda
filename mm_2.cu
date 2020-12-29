@@ -16,9 +16,9 @@ __global__ void mm_kernel(float* A, float* B, float* C) {
     unsigned int thx = threadIdx.x, thy = threadIdx.y;
     unsigned int grdx = gridDim.x, grdy = gridDim.y;
     //const unsigned int bx = BLOCK_X, by = BLOCK_Y;
-    unsigned int bx = blockDim.x, by = blockDim.y;
+    const unsigned int bx = blockDim.x, by = blockDim.y;
 
-    __shared__ float a[blockDim.x][blockDim.y], b[blockDim.x][blockDim.y]; 
+    __shared__ float a[bx][by], b[bx][by];
     if (row < N && col < N) {
         float tmp = 0;
         for (int i = 0; i < grdy; ++i) { //2. grd를 넘기면 멈춤
